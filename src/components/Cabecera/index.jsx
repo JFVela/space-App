@@ -4,17 +4,17 @@ const HeaderEstilizado = styled.header`
   display: flex;
   justify-content: space-between;
   padding: 60px 0;
-  img{
+  img {
     width: 200px;
     height: auto;
   }
 `;
 
-const Cabezaera = () => {
+const Cabezaera = ({ setconsulta }) => {
   return (
     <HeaderEstilizado>
       <img src="img/logo.png" alt="Logo Space App" />
-      <CampoTexto/>
+      <CampoTexto setconsulta={setconsulta} />
     </HeaderEstilizado>
   );
 };
