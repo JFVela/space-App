@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Titulo from "../Titulo";
 import Tag from "./Tag";
 import Populares from "./Populares";
-import Imgen from "./Imagen";
+import Imagen from "./Imagen";
 
 const GaleriaContainer = styled.div`
   display: flex;
@@ -19,7 +19,7 @@ const ImagenesContainer = styled.section`
   gap: 24px;
 `;
 
-const Galeria = ({ fotos = [], alSeleccionar, alternarFavorito }) => {
+const Galeria = ({ fotos = [], alSeleccionar, alternarFavorito, consulta }) => {
   return (
     <>
       <Tag />
@@ -27,16 +27,30 @@ const Galeria = ({ fotos = [], alSeleccionar, alternarFavorito }) => {
         <SeccionFluida>
           <Titulo>Navegue por la galeria</Titulo>
           <ImagenesContainer>
-            {fotos.map((foto) => {
-              return (
-                <Imgen
+            {fotos
+              .filter((foto) => {
+                return (
+                  consulta === "" ||
+                  foto.titulo
+                    .toLocaleLowerCase()
+                    .normalize("NFD")
+                    .replace(/\p{Diacritic}/gu, "")
+                    .includes(
+                      consulta
+                        .toLocaleLowerCase()
+                        .normalize("NFD")
+                        .replace(/\p{Diacritic}/gu, "")
+                    )
+                );
+              })
+              .map((foto) => (
+                <Imagen
                   alternarFavorito={alternarFavorito}
                   alSolicitarZoom={alSeleccionar}
                   key={foto.id}
                   foto={foto}
                 />
-              );
-            })}
+              ))}
           </ImagenesContainer>
         </SeccionFluida>
         <Populares />
