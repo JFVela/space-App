@@ -5,9 +5,8 @@ import BarraLateral from "./components/BarraLateral";
 import Banner from "./components/Banner";
 import banner from "./assets/banner.png";
 import Galeria from "./components/Galeria";
-import { useEffect, useState } from "react";
 import ModalZoom from "./components/ModalZoom";
-import Cargando from "./components/Cargando";
+import GlobalContextProvider from "./context/GlobalContext";
 
 const FondoGradiente = styled.div`
   background: linear-gradient(
@@ -36,67 +35,27 @@ const ContenidoGaleria = styled.section`
 `;
 
 const App = () => {
-  const [consulta, setconsulta] = useState("");
-  const [fotosGaleria, setFotosGaleria] = useState([]);
-  const [fotoSeleccionada, setFotoSeleccionada] = useState(null);
-
-  const cerrarModal = () => setFotoSeleccionada(null); // Función para cerrar el modal
-
-  const alternarFavorito = (foto) => {
-    setFotosGaleria((prevFotos) =>
-      prevFotos.map(
-        (f) => (f.id === foto.id ? { ...f, favorita: !f.favorita } : f) // Mantener el resto igual
-      )
-    );
-
-    // Si la foto seleccionada es la que se está modificando, también actualiza su estado
-    if (fotoSeleccionada?.id === foto.id) {
-      setFotoSeleccionada({ ...foto, favorita: !foto.favorita });
-    }
-  };
-
-  useEffect(() => {
-    const getData = async () => {
-      const res = await fetch("http://localhost:3000/fotos");
-      const data = await res.json();
-      setFotosGaleria([...data]);
-    };
-    setTimeout(() => getData(), 5000);
-  }, []);
 
   return (
     <>
       <FondoGradiente>
         <GlobalStyles />
-        <AppContainer>
-          <Cabezaera setconsulta={setconsulta} />
-          <MainContainer>
-            <BarraLateral />
-            <ContenidoGaleria>
-              {/* <p>La consulta actual es: {consulta}</p> */}
-              <Banner
-                texto="La galería más completa de fotos del espacio"
-                backgroundImage={banner}
-              />
-              {fotosGaleria.length == 0 ? (
-                <Cargando></Cargando>
-              ) : (
-                <Galeria
-                  alSeleccionar={(foto) => setFotoSeleccionada(foto)}
-                  fotos={fotosGaleria}
-                  alternarFavorito={alternarFavorito}
-                  consulta={consulta}
+        <GlobalContextProvider>
+          <AppContainer>
+            <Cabezaera />
+            <MainContainer>
+              <BarraLateral />
+              <ContenidoGaleria>
+                <Banner
+                  texto="La galería más completa de fotos del espacio"
+                  backgroundImage={banner}
                 />
-              )}
-            </ContenidoGaleria>
-          </MainContainer>
-        </AppContainer>
-        {/* Pasar la función cerrarModal como prop */}
-        <ModalZoom
-          foto={fotoSeleccionada}
-          close={cerrarModal}
-          alternarFavorito={alternarFavorito}
-        />
+                <Galeria />
+              </ContenidoGaleria>
+            </MainContainer>
+          </AppContainer>
+          <ModalZoom />
+        </GlobalContextProvider>
       </FondoGradiente>
     </>
   );

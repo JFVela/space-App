@@ -3,6 +3,9 @@ import Titulo from "../Titulo";
 import Tag from "./Tag";
 import Populares from "./Populares";
 import Imagen from "./Imagen";
+import { useContext } from "react";
+import { GlobalContext } from "../../context/GlobalContext";
+import Cargando from "../Cargando";
 
 const GaleriaContainer = styled.div`
   display: flex;
@@ -19,24 +22,29 @@ const ImagenesContainer = styled.section`
   gap: 24px;
 `;
 
-const Galeria = ({ fotos = [], alSeleccionar, alternarFavorito, consulta }) => {
-  return (
+const Galeria = () => {
+  //const { fotosGaleria, consulta, alternarFavorito, setFotoSeleccionada } =useContext(GlobalContext);
+  const { state } = useContext(GlobalContext);
+
+  return state.fotosGaleria.length === 0 ? (
+    <Cargando></Cargando>
+  ) : (
     <>
       <Tag />
       <GaleriaContainer>
         <SeccionFluida>
           <Titulo>Navegue por la galeria</Titulo>
           <ImagenesContainer>
-            {fotos
+            {state.fotosGaleria
               .filter((foto) => {
                 return (
-                  consulta === "" ||
+                  state.consulta === "" ||
                   foto.titulo
                     .toLocaleLowerCase()
                     .normalize("NFD")
                     .replace(/\p{Diacritic}/gu, "")
                     .includes(
-                      consulta
+                      state.consulta
                         .toLocaleLowerCase()
                         .normalize("NFD")
                         .replace(/\p{Diacritic}/gu, "")
@@ -44,12 +52,7 @@ const Galeria = ({ fotos = [], alSeleccionar, alternarFavorito, consulta }) => {
                 );
               })
               .map((foto) => (
-                <Imagen
-                  alternarFavorito={alternarFavorito}
-                  alSolicitarZoom={alSeleccionar}
-                  key={foto.id}
-                  foto={foto}
-                />
+                <Imagen key={foto.id} foto={foto} />
               ))}
           </ImagenesContainer>
         </SeccionFluida>

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import Imagen from "../Galeria/Imagen";
 import BotonIcono from "../BotonIcono";
+import { useContext } from "react";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.7);
@@ -29,15 +31,21 @@ const DialogEstilizado = styled.dialog`
   }
 `;
 
-const ModalZoom = ({ foto, close, alternarFavorito }) => {
+const ModalZoom = () => {
+  const { fotoSeleccionada, alternarFavorito, setFotoSeleccionada } =
+    useContext(GlobalContext);
+
   return (
     <>
-      {foto && (
+      {fotoSeleccionada && (
         <>
           <Overlay />
-          <DialogEstilizado open={!!foto} onClose={close}>
+          <DialogEstilizado
+            open={!!fotoSeleccionada}
+            onClose={() => setFotoSeleccionada(null)}
+          >
             <Imagen
-              foto={foto}
+              foto={fotoSeleccionada}
               expandida={true}
               alternarFavorito={alternarFavorito}
             />

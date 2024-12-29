@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import CampoTexto from "../CampoTexto";
+
 const HeaderEstilizado = styled.header`
   display: flex;
   justify-content: space-between;
@@ -10,11 +11,11 @@ const HeaderEstilizado = styled.header`
   }
 `;
 
-const Cabezaera = ({ setconsulta }) => {
+const Cabezaera = () => {
   return (
     <HeaderEstilizado>
       <img src="img/logo.png" alt="Logo Space App" />
-      <CampoTexto setconsulta={setconsulta} />
+      <CampoTexto/>
     </HeaderEstilizado>
   );
 };
